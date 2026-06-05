@@ -380,12 +380,64 @@ function init() {
   initTimer();
   initTodo();
   initLinks();
+  initCursor();
 
   document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 
   if ('Notification' in window && Notification.permission === 'default') {
     Notification.requestPermission();
   }
+}
+
+function initCursor() {
+  const dot = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  if (!dot || !ring) return;
+
+  let mouseX = -100, mouseY = -100;
+  let ringX = -100, ringY = -100;
+  let rafId;
+
+  // Update dot position langsung (no lag)
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    dot.style.left = mouseX + 'px';
+    dot.style.top = mouseY + 'px';
+  });
+
+  // Ring mengikuti dengan sedikit lag (smooth trailing)
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    rafId = requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // Hover effect pada elemen interaktif
+  const interactiveSelectors = 'a, button, input, select, textarea, label[for], [role="button"]';
+  document.addEventListener('mouseover', (e) => {
+    if (e.target.matches(interactiveSelectors) || e.target.closest(interactiveSelectors)) {
+      document.body.classList.add('cursor-hover');
+    }
+  });
+  document.addEventListener('mouseout', (e) => {
+    if (e.target.matches(interactiveSelectors) || e.target.closest(interactiveSelectors)) {
+      document.body.classList.remove('cursor-hover');
+    }
+  });
+
+  // Sembunyikan cursor saat keluar window
+  document.addEventListener('mouseleave', () => {
+    dot.style.opacity = '0';
+    ring.style.opacity = '0';
+  });
+  document.addEventListener('mouseenter', () => {
+    dot.style.opacity = '1';
+    ring.style.opacity = '';
+  });
 }
 
 document.addEventListener('DOMContentLoaded', init);

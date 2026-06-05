@@ -2,6 +2,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  cursor: none !important;
 }
 
 :root {
@@ -48,6 +49,56 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   transition: background var(--transition), color var(--transition);
+  cursor: none;
+}
+
+/* ── Custom Cursor ── */
+#cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: background var(--transition), transform 0.1s ease;
+}
+
+#cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s ease, height 0.2s ease, border-color var(--transition), opacity 0.2s ease;
+  opacity: 0.6;
+}
+
+/* Ring membesar saat hover elemen interaktif */
+body.cursor-hover #cursor-ring {
+  width: 52px;
+  height: 52px;
+  opacity: 1;
+  border-color: var(--accent);
+}
+
+/* Dot menyusut saat hover */
+body.cursor-hover #cursor-dot {
+  transform: translate(-50%, -50%) scale(0.5);
+}
+
+/* Semua elemen interaktif tetap menunjukkan pointer (tapi cursor asli tetap none) */
+a, button, input, select, textarea, label[for], [role="button"],
+a *, button *, [role="button"] * {
+  cursor: none !important;
 }
 
 .sr-only {
